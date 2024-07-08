@@ -49,250 +49,193 @@ const content = {
   
   React makes it easy to create interactive, reusable UI components.`
   },
-  'advanced-react': {
-    title: 'Advanced React',
-    body: `# Advanced React
-  
-  Let's dive deeper into React and explore some advanced concepts.
-  
-  ## Hooks
-  
-  Hooks are a way to use state and other React features without writing a class. The most commonly used hooks are:
-  
-  - **useState**: Allows you to add state to functional components.
-  - **useEffect**: Allows you to perform side effects in function components.
-  - **useContext**: Allows you to subscribe to React context without introducing nesting.
-  
-  Example of using \`useState\` and \`useEffect\`:
-  
-  \`\`\`jsx
-  import React, { useState, useEffect } from 'react';
-  
-  function Counter() {
-    const [count, setCount] = useState(0);
-  
-    useEffect(() => {
-      document.title = \`You clicked \${count} times\`;
-    }, [count]);
-  
-    return (
-      <div>
-        <p>You clicked {count} times</p>
-        <button onClick={() => setCount(count + 1)}>
-          Click me
-        </button>
-      </div>
-    );
-  }
-  
-  export default Counter;
-  \`\`\`
-  
-  Hooks provide a powerful way to manage state and side effects in your React applications.`
-  },
-  'project-setup': {
-    title: 'Project Setup',
-    body: `# Setting Up Your React Project
-  
-  Getting started with a new React project is easy. Here are the steps to set up a new project using Create React App.
-  
-  ## Installation
-  
-  First, you need to have Node.js and npm installed. Then, you can create a new React project by running:
-  
-  \`\`\`bash
-  npx create-react-app my-app
-  cd my-app
-  npm start
-  \`\`\`
-  
-  This will set up a new React project and start the development server.
-  
-  ## Project Structure
-  
-  The default project structure includes:
-  - \`public\`: Static assets like HTML, CSS, and images.
-  - \`src\`: The source code of your React application.
-  
-  ## Customizing Your Project
-  
-  You can customize your project by modifying the files in the \`src\` directory. Start by editing \`src/App.js\` to change the content of your main component.`
-  },
-  'styling-components': {
-    title: 'Styling Components',
-    body: `# Styling React Components
-  
-  Styling your components is an essential part of building a React application. There are several ways to add styles to your components.
-  
-  ## CSS Modules
-  
-  CSS Modules allow you to write CSS that is scoped to a single component. This prevents styles from leaking into other components.
-  
-  Example:
-  
-  \`\`\`css
-  /* Button.module.css */
-  .button {
-    background-color: blue;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-  }
-  \`\`\`
-  
-  \`\`\`jsx
-  import React from 'react';
-  import styles from './Button.module.css';
-  
-  function Button() {
-    return <button className={styles.button}>Click Me</button>;
-  }
-  
-  export default Button;
-  \`\`\`
-  
-  ## Styled-Components
-  
-  Styled-components allow you to use ES6 and CSS to style your components. It removes the mapping between components and styles.
-  
-  Example:
-  
-  \`\`\`jsx
-  import styled from 'styled-components';
-  
-  const Button = styled.button\`
-    background-color: blue;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-  \`;
-  
-  function App() {
-    return <Button>Click Me</Button>;
-  }
-  
-  export default App;
-  \`\`\`
-  
-  Both methods provide a way to encapsulate styles and make your components more modular.`
-  },
-  'routing': {
-    title: 'React Routing',
-    body: `# React Routing
-  
-  React Router is a powerful library that allows you to handle routing in your React applications.
-  
-  ## Setting Up React Router
-  
-  First, install React Router by running:
-  
-  \`\`\`bash
-  npm install react-router-dom
-  \`\`\`
-  
-  ## Defining Routes
-  
-  You can define routes using the \`Route\` component. Here's an example:
-  
-  \`\`\`jsx
-  import React from 'react';
-  import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-  import Home from './Home';
-  import About from './About';
-  
-  function App() {
-    return (
-      <Router>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/about" component={About} />
-        </Switch>
-      </Router>
-    );
-  }
-  
-  export default App;
-  \`\`\`
-  
-  ## Navigation
-  
-  Use the \`Link\` component to navigate between routes:
-  
-  \`\`\`jsx
-  import React from 'react';
-  import { Link } from 'react-router-dom';
-  
-  function Navbar() {
-    return (
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-        </ul>
-      </nav>
-    );
-  }
-  
-  export default Navbar;
-  \`\`\`
-  
-  React Router makes it easy to manage navigation and routing in your React applications.`
-  },
-  'redux-introduction': {
-    title: 'Introduction to Redux',
-    body: `# Introduction to Redux
-  
-  Redux is a predictable state container for JavaScript apps. It helps you write applications that behave consistently, run in different environments, and are easy to test.
-  
-  ## Core Concepts
-  
-  1. **Store**: The single source of truth that holds the state of your application.
-  2. **Actions**: Plain JavaScript objects that represent an intention to change the state.
-  3. **Reducers**: Functions that specify how the state changes in response to actions.
-  
-  ## Setting Up Redux
-  
-  Install Redux and React-Redux:
-  
-  \`\`\`bash
-  npm install redux react-redux
-  \`\`\`
-  
-  ## Creating a Store
-  
-  Example of setting up a Redux store:
-  
-  \`\`\`jsx
-  import { createStore } from 'redux';
-  import { Provider } from 'react-redux';
-  
-  const initialState = { count: 0 };
-  
-  function reducer(state = initialState, action) {
-    switch (action.type) {
-      case 'INCREMENT':
-        return { count: state.count + 1 };
-      default:
-        return state;
-    }
-  }
-  
-  const store = createStore(reducer);
-  
-  function App() {
-    return (
-      <Provider store={store}>
-        <Counter />
-      </Provider>
-    );
-  }
-  
-  export default App;
-  \`\`\`
-  
-  Redux provides a robust way to manage state in your React applications, making it easier to handle complex state interactions.`
+  'translation-app': {
+    title: 'Translation App User Guide',
+    body: `
+# 🌐 Translation App User Guide
+
+![Translation App Logo](https://central.3bscientific.com/_images/3B_50x50_icon.png)
+
+
+## 🚀 Introduction
+
+Welcome to the Translation App, your gateway to efficient, integrated content translation!
+
+> **Key Benefits:**
+> - 🔗 Seamless integration with Web Central
+> - 💰 Cost-effective solution
+> - ⏱️ Time-saving workflows
+> - 🔄 Automated publication process
+
+---
+
+## 🔑 Accessing the App
+
+1. Log in to Web Central
+2. Navigate to: \`Content\` > \`Translation App\`
+3. Ensure you have the necessary permissions
+
+> 🔒 **Note:** If you can't access the app, contact your system administrator.
+
+---
+
+## 🖥️ User Interface
+
+### Header Navigation
+
+- **Translator** 🌍: Main translation interface
+- **Translations** 📋: 
+  - General Translations
+  - Product Translations
+- **Import** 📤: Batch upload feature
+- **Ticket** 🎫: Access support
+- **Central** 🏠: Return to Web Central homepage
+
+### Main Components
+
+1. **Translation Tables** 📊
+   - Filter by brand, language, and status
+   - Click on rows to edit
+2. **Edit Modal** ✏️
+   - Side-by-side view of source and target text
+   - Rich text editing capabilities
+3. **Status Management** 🚦
+   - Update translation status
+   - Track progress through workflow
+
+---
+
+## 👥 Roles and Permissions
+
+The Translation App offers three levels of access, each with increasing capabilities:
+
+### 🔹 Level 1: Basic User
+- Access to main translator interface (similar to Google Translate or DeepL)
+- Can perform translations but cannot save them
+
+> 💡 **Tip:** Perfect for quick, on-the-fly translations without database impact.
+
+### 🔹🔹 Level 2: Translation Editor
+All Level 1 capabilities, plus:
+- Access to "Translations" menu with sub-options:
+  - Product Translations
+  - General Translations
+- Ability to save translations
+- Can edit content and update status in translation tables
+
+> 🔑 **Key Feature:** Edit and manage translations across the system.
+
+### 🔹🔹🔹 Level 3: Translation Publisher
+All Level 1 and 2 capabilities, plus:
+- "Publish" action button in Product Translations table
+- Can publish translations directly to product description pages
+
+> 🚀 **Power User:** Full control over translation workflow and publication.
+
+| Feature | Level 1 | Level 2 | Level 3 |
+|---------|:-------:|:-------:|:-------:|
+| Basic Translation | ✅ | ✅ | ✅ |
+| Save Translations | ❌ | ✅ | ✅ |
+| Edit Stored Translations | ❌ | ✅ | ✅ |
+| Publish to Product Pages | ❌ | ❌ | ✅ |
+
+> ⚠️ **Note:** Contact your system administrator if you need a role change or have questions about your access level.
+
+---
+
+## 📝 Translation Management
+
+### Viewing Translations
+
+1. Go to "Product Translations" or "General Translations"
+2. Use filters to narrow down the list
+3. Observe key info: SAP Number, Languages, Status
+
+### Editing Process
+
+1. Click on a table row to open the edit modal
+2. Source text on left, translation on right
+3. Use the Quill editor for formatting
+4. Maintain consistent styling with source
+
+### Status Workflow
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| 🟡 Pending | New translation | Review and edit |
+| 🟢 Ready | Prepared for publish | Final check |
+| 🔄 Rewrite | Needs revision | Partial rewrite |
+| ✅ Complete | Published | No action needed |
+| ❌ Deny | Rejected | Full regeneration |
+| ⏹️ Cancelled | Not for use | Remove from workflow |
+
+> 💡 **Tip:** Use status changes to communicate with team members about translation progress.
+
+---
+
+## 📦 Batch Upload
+
+For bulk product translations:
+
+1. Navigate to \`Import\` > \`Import Products\`
+2. Upload CSV file with product details
+3. Select target languages
+4. Click "Translate"
+5. Monitor progress bar
+6. Save translations when complete
+
+> ⚠️ **Important:** Ensure CSV format matches expected structure to avoid errors.
+
+---
+
+## 🌐 General Translations
+
+For non-product content:
+
+1. Access via \`Translations\` > \`General Translations\`
+2. Interface similar to product translations
+3. May have different fields based on content type
+
+> 🔍 **Pro Tip:** Use this section for blogs, newsletters, and website content.
+
+---
+
+## 🛠️ Advanced Features
+
+- **Character Count** 🔢: Visible for space-conscious translations
+- **HTML Preservation** 📄: Maintains source formatting
+- **Concurrent Processing** ⚡: Fast batch translations
+
+---
+
+## 🆘 Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Can't access features | Check user permissions |
+| Technical glitches | Use "Ticket" in header to contact support |
+| Translation errors | Use "Rewrite" status |
+
+> 📞 **Need Help?** Contact Timur James Tanurhan for support or feedback.
+
+---
+
+## ✨ Best Practices
+
+1. 💾 Save work frequently
+2. 🔍 Use filters effectively
+3. 👀 Pay attention to context and tone
+4. 📊 Ensure correct CSV formatting for batch uploads
+5. 🔄 Utilize "Rewrite" for minor adjustments
+
+> 🌟 **Remember:** Your feedback helps improve the app. Share your experiences!
+
+---
+
+**Thank you for using the Translation App!**
+
+*This guide will be updated with new version releases. Last revision: 05.07.2024*
+`
   },
 };
 
