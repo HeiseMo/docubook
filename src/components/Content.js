@@ -6,9 +6,12 @@ import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import 'highlight.js/styles/github.css';
-import content from '../data/content';
+import MarkdownIt from 'markdown-it';
+import MdEditor from 'react-markdown-editor-lite';
+import 'react-markdown-editor-lite/lib/index.css';
 import { useTheme } from '../contexts/ThemeContext';
 import TableOfContents from './TableOfContents';
+import customPlugin from '../utils/customMarkdownPlugin';
 
 function extractHeadings(markdown) {
   const headingRegex = /^(#{1,6})\s+(.+)$/gm;
@@ -26,54 +29,81 @@ function extractHeadings(markdown) {
   return headings;
 }
 
-function Content() {
+function Content({ 
+  contentState, 
+  setContentState, 
+  editMode, 
+  setEditMode, 
+  markdown, 
+  setMarkdown, 
+  handleEditorChange, 
+  handleSave, 
+  headings, 
+  setHeadings, 
+  contentRef 
+}) {
   const { id } = useParams();
-  const pageContent = content[id];
   const { isDarkMode } = useTheme();
-  const [headings, setHeadings] = useState([]);
-  const contentRef = useRef(null);
 
   useEffect(() => {
+    const pageContent = contentState[id];
     if (pageContent) {
+      setMarkdown(pageContent.body);
       const extractedHeadings = extractHeadings(pageContent.body);
       setHeadings(extractedHeadings);
     }
-  }, [pageContent]);
+    setEditMode(false);
+  }, [id, contentState, setMarkdown, setHeadings, setEditMode]);
 
-  const scrollToHeading = (headingId) => {
-    const element = contentRef.current.querySelector(`#${headingId}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  const mdParser = new MarkdownIt().use(customPlugin);
 
-  if (!pageContent) {
+  if (!contentState[id]) {
     return <div className={`content ${isDarkMode ? 'dark' : ''}`}>Page not found</div>;
   }
 
+  const MarkdownContent = () => (
+    <ReactMarkdown 
+      remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
+      components={{
+        table: ({node, ...props}) => <table className="markdown-table" {...props} />,
+        img: ({node, ...props}) => <img className="markdown-image" {...props} alt={props.alt || ''} />,
+        blockquote: ({node, ...props}) => <blockquote className="feature-block" {...props} />,
+        code: ({node, inline, ...props}) => 
+          inline ? <code className="inline-code" {...props} /> : <pre><code {...props} /></pre>,
+        a: ({node, ...props}) => <a className="markdown-link" {...props} target="_blank" rel="noopener noreferrer" />,
+        ul: ({node, ...props}) => <ul className="markdown-list" {...props} />,
+        ol: ({node, ...props}) => <ol className="markdown-list" {...props} />,
+        hr: ({node, ...props}) => <hr className="markdown-hr" {...props} />
+      }}
+    >
+      {markdown}
+    </ReactMarkdown>
+  );
+
   return (
-    <div className={`content-wrapper ${isDarkMode ? 'dark' : ''}`}>
-      <div className={`content ${isDarkMode ? 'dark' : ''}`} ref={contentRef}>
-        <h1>{pageContent.title}</h1>
-        <ReactMarkdown 
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
-          components={{
-            table: ({node, ...props}) => <table className="markdown-table" {...props} />,
-            img: ({node, ...props}) => <img className="markdown-image" {...props} alt={props.alt || ''} />,
-            blockquote: ({node, ...props}) => <blockquote className="feature-block" {...props} />,
-            code: ({node, inline, ...props}) => 
-              inline ? <code className="inline-code" {...props} /> : <pre><code {...props} /></pre>,
-            a: ({node, ...props}) => <a className="markdown-link" {...props} target="_blank" rel="noopener noreferrer" />,
-            ul: ({node, ...props}) => <ul className="markdown-list" {...props} />,
-            ol: ({node, ...props}) => <ol className="markdown-list" {...props} />,
-            hr: ({node, ...props}) => <hr className="markdown-hr" {...props} />
-          }}
-        >
-          {pageContent.body}
-        </ReactMarkdown>
-      </div>
-      <TableOfContents headings={headings} scrollToHeading={scrollToHeading} />
+    <div className={`gitbook-layout ${isDarkMode ? 'dark' : ''}`}>
+      <main className="gitbook-main">
+        <div className="content-header">
+          <h1>{contentState[id].title}</h1>
+          <button onClick={() => setEditMode(!editMode)} className="edit-toggle">
+            {editMode ? 'View' : 'Edit'}
+          </button>
+          <button onClick={() => handleSave(id)} className="save-button">Save</button>
+        </div>
+        <div className="content-body" ref={contentRef}>
+          {editMode ? (
+            <MdEditor
+              style={{ height: 'calc(100vh - 120px)' }}
+              renderHTML={(text) => mdParser.render(text)}
+              onChange={handleEditorChange}
+              value={markdown}
+            />
+          ) : (
+            <MarkdownContent />
+          )}
+        </div>
+      </main>
     </div>
   );
 }

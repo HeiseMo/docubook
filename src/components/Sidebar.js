@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import content from '../data/content';
 import { useTheme } from '../contexts/ThemeContext';
+import NewPageModal from './NewPageModal';
 
-function Sidebar() {
+function Sidebar({ onCreatePage, contentState }) {
   const location = useLocation();
   const { isDarkMode, toggleTheme } = useTheme();
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const overlayRef = useRef(null);
+  const [isNewPageModalOpen, setIsNewPageModalOpen] = useState(false);
 
   const openOverlaySearch = () => {
     setIsOverlayOpen(true);
@@ -38,7 +39,7 @@ function Sidebar() {
         <div className="sidebar-search">
           <input 
             type="text" 
-            placeholder="Search..." 
+            placeholder="Search...                 Ctrl + K" 
             onClick={openOverlaySearch}
           />
         </div>
@@ -46,12 +47,18 @@ function Sidebar() {
           <li className={location.pathname === '/' ? 'active' : ''}>
             <Link to="/">Home</Link>
           </li>
-          {Object.entries(content).map(([id, item]) => (
+          {Object.entries(contentState).map(([id, item]) => (
             <li key={id} className={location.pathname === `/content/${id}` ? 'active' : ''}>
               <Link to={`/content/${id}`}>{item.title}</Link>
             </li>
           ))}
         </ul>
+        <button 
+          className="new-page-button" 
+          onClick={() => setIsNewPageModalOpen(true)}
+        >
+          + New Page
+        </button>
       </nav>
       
       {isOverlayOpen && (
@@ -69,6 +76,12 @@ function Sidebar() {
           </div>
         </div>
       )}
+
+      <NewPageModal 
+        isOpen={isNewPageModalOpen}
+        onClose={() => setIsNewPageModalOpen(false)}
+        onCreatePage={onCreatePage}
+      />
     </>
   );
 }
